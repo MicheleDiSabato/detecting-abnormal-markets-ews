@@ -15,3 +15,9 @@ Moreover,
 * use FFNN to elaborate some statistics about the time series (average, variance, skewness, kurtosis, ...). With this approach, the sime dependance of each feature is "hidden" in the statistics.
 * choose the optimizing metric based on a business approach: it's better to capture a crisis whenever it happens, rahter than missing it (i.e. avoid false negatives). Still, the other metrics should be greater than a threshold.
 * PCA might not be appropriate, since it is based on second moments, but anomaly detection is often related to higher order moments (e.g. fat tails).
+
+
+To DO:
+* tune \epsilon in a better way
+* use the distribution from the Copula to construct a Confidence Region of level 1 - \alpha and classify as ourliers all the points outside the CR
+* find a better Copula model
