@@ -5,7 +5,7 @@ function [bestEpsilon, best_optimizing_index] = OptimThreshold(ycval, p)
 
 bestEpsilon = 0;
 best_optimizing_index = 0;
-stepsize = (max(p) - min(p)) / 10000;
+stepsize = (max(p) - min(p)) / 1000;
 
 for epsilon = min(p):stepsize:max(p)
 
@@ -20,9 +20,7 @@ for epsilon = min(p):stepsize:max(p)
     F1 = 2 * prec * rec / (prec + rec);
     % optimizing_index = 100*tp - 75*fp;
     % optimizing_index = accuracy; % all 0
-    % optimizing_index = rec; % all 1
-    optimizing_index = accuracy * rec / (accuracy + rec);
-    % optimizing_index = rec - accuracy;
+    optimizing_index = accuracy; % all 1
     
     if optimizing_index> best_optimizing_index
         best_optimizing_index = optimizing_index;
