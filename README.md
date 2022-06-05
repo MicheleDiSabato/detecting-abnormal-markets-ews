@@ -9,6 +9,7 @@ Current objectves and ideas:
 5) rolling logistic regression and COPOD
 6) combine models 
 7) use [conformal prediction](https://github.com/valeman/awesome-conformal-prediction) to predict the anomalies
+8) over/undersampling
 
 Moreover,
 * look at correlation among the selected features: to detect an anomaly it could be useful to look for "hints", i.e. events after which the correlation among the selected features increaes in absolute value.
