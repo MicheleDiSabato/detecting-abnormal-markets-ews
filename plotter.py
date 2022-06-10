@@ -89,8 +89,24 @@ for i in range(2):
         axs[i,j].bar(x=anomaly_indices, height=ub, bottom = lb)
         axs[i,j].set_title(feature_name_2, fontsize=15)
         count += 1
-plt.show()
+# plt.show()
 fig.savefig('plots' + os.sep + 'VIX_XAUBGNL_EONIA_USGG2YR', bbox_inches='tight')
+
+df_stat = pd.DataFrame(d_stationary)
+fig, axs = plt.subplots(2, 2, figsize = (20,7))
+count = 0
+for i in range(2):
+    for j in range(2):
+        feature_name_2 = plot_names[count]
+        axs[i,j].plot(df_stat[feature_name_2], linewidth = 2, color = "darkorange")
+        anomaly_indices=np.argwhere(y_cat[:,0] == 1)[:,0]
+        lb = np.min(df_stat[feature_name_2])-0.1
+        ub = np.abs(lb) + np.max(df_stat[feature_name_2])+0.1
+        axs[i,j].bar(x=anomaly_indices, height=ub, bottom = lb)
+        axs[i,j].set_title(feature_name_2, fontsize=15)
+        count += 1
+plt.show()
+fig.savefig('plots' + os.sep + 'VIX_XAUBGNL_EONIA_USGG2YR_stationary', bbox_inches='tight')
 
 
 
