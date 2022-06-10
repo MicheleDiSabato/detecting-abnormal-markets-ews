@@ -1,0 +1,471 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>AnomalyDetection</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-06-09"><meta name="DC.source" content="AnomalyDetection.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">FEATURE STAZIONARIZATION</a></li><li><a href="#3">FEATURE SELECTION</a></li><li><a href="#4">DATASET SPLITTING</a></li><li><a href="#5">DATA RESCALING</a></li><li><a href="#6">SUBSAMPLING</a></li><li><a href="#7">COPULAS NOVELTY DETECTION MODELS - Gaussian Copula</a></li><li><a href="#8">HYPERPARAMETER EPSILON TUNING</a></li><li><a href="#9">TEST SET MODEL PERFORMANCE</a></li></ul></div><pre class="codeinput"><span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% EARLY WARNING SYSTEM FOR ANOMALY DETECTION</span>
+<span class="comment">%  Final Project Fintech Course 2022</span>
+<span class="comment">%  MSc Mathematical Engineering</span>
+<span class="comment">%    - Alessandro Del Vitto</span>
+<span class="comment">%    - Michele Di Sabato</span>
+<span class="comment">%    - Raffaella D'Anna</span>
+<span class="comment">%    - Andrea Puricelli</span>
+<span class="comment">%    - Rita Numeroli</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+clc
+clear
+close <span class="string">all</span>
+
+<span class="comment">% Dataset loading</span>
+load(<span class="string">'C:\Users\famig\Documents\Alessandro\POLIMI\Fintech\BusinessCase3\EWS.mat'</span>)
+</pre><h2 id="2">FEATURE STAZIONARIZATION</h2><pre class="codeinput"><span class="comment">% Always positive variables   =&gt; log-differences (log-returns)</span>
+Indices_Currencies = [XAUBGNL BDIY CRY Cl1 DXY EMUSTRUU GBP JPY LF94TRUU<span class="keyword">...</span>
+                      LF98TRUU LG30TRUU LMBITR LP01TREU<span class="keyword">...</span>
+                      LUACTRUU LUMSTRUU MXBR MXCN MXEU MXIN MXJP MXRU MXUS VIX];
+
+<span class="comment">% Possibly negative variables =&gt; first differences (variations)</span>
+InterestRates = [EONIA GTDEM10Y GTDEM2Y GTDEM30Y GTGBP20Y GTGBP2Y GTGBP30Y<span class="keyword">...</span>
+                 GTITL10YR GTITL2YR GTITL30YR GTJPY10YR GTJPY2YR<span class="keyword">...</span>
+                 GTJPY30YR US0001M USGG3M USGG2YR GT10 USGG30YR];
+
+<span class="comment">% Stationary Features</span>
+X = [diff(log(Indices_Currencies)) ECSURPUS(2:end) diff(InterestRates)];
+
+<span class="comment">% Response</span>
+Response = Y(2:end);
+
+<span class="comment">% Time window</span>
+Days = Data(1:end);
+</pre><h2 id="3">FEATURE SELECTION</h2><p>We have proceeded in feature selection on Python  - we have applied a statistical test to discard features that did not    have a relevant change in distributions between the classes  - we have eliminated highly correlated features  - we have selected a subset of the remaining features accordingly to    their financial menaing and geographical information</p><pre class="codeinput"><span class="comment">% Selected Features</span>
+selected_cols = [2 3 25 27 30 16 18 22 40 23];
+X = X(:,selected_cols);
+</pre><h2 id="4">DATASET SPLITTING</h2><pre class="codeinput"><span class="comment">% -------------------------------------------------------------------------</span>
+<span class="comment">% 1) Splitting for standard classification (Matlab Classification Learner)</span>
+<span class="comment">%</span>
+<span class="comment">% N = size(X(:,1));</span>
+<span class="comment">% train_perc = 0.8;</span>
+<span class="comment">% split = round(train_perc*N);</span>
+<span class="comment">%</span>
+<span class="comment">% X_train = X(1:split,:);</span>
+<span class="comment">% X_test  = X(split+1:end,:);</span>
+<span class="comment">%</span>
+<span class="comment">% Y_train = Response(1:split,:);</span>
+<span class="comment">% Y_test  = Response(split+1:end,:);</span>
+
+<span class="comment">% -------------------------------------------------------------------------</span>
+<span class="comment">% 2) Splitting for copula novelty detection models</span>
+
+<span class="comment">% Tot number of samples</span>
+nObs = length(Response);
+
+<span class="comment">% Tot number of normal samples</span>
+nObsNorm = sum(Response == 0);
+<span class="comment">% Tot number of abnormal samples</span>
+nObsAbNorm = nObs - nObsNorm;
+
+<span class="comment">% Training set size (normal samples only)</span>
+nObsTrain = round(0.80*nObsNorm);
+
+<span class="comment">% Validation set normal portion size</span>
+nObsCVNorm = round(0.10*nObsNorm);
+<span class="comment">% Validation set abnormal portion size (balanced wrt normal part)</span>
+nObsCVabNorm = nObsCVNorm;
+
+<span class="comment">% Test set abnormal portion size</span>
+nObsTest_abNorm = nObsAbNorm - nObsCVabNorm;
+
+<span class="comment">% Dataset Shuffling</span>
+idxPermutation = randperm(nObs);
+
+X = X(idxPermutation,:);
+Response = Response(idxPermutation);
+
+<span class="comment">% dividing normal/abnormal</span>
+Xnormal   = X(Response == 0,:);
+Xabnormal = X(Response == 1,:);        <span class="comment">% we don't need response for training set (all zeros)</span>
+Yabnormal = Response(Response == 1,:);
+
+<span class="comment">% TRAINING SET</span>
+X_train = Xnormal(1:nObsTrain,:);
+<span class="comment">% VALIDATION SET</span>
+XCV     = [Xnormal(nObsTrain+1:nObsTrain+1+nObsCVNorm,:); Xabnormal(1:nObsCVabNorm,:)];
+<span class="comment">% TEST SET</span>
+X_test  = [Xnormal(nObsTrain+1+nObsCVNorm+1:end,:); Xabnormal(nObsCVabNorm+1:end,:)];
+
+<span class="comment">% Responses</span>
+yCV = zeros(length(XCV),1);
+yCV(end-nObsCVabNorm+1:end) = Yabnormal(1:nObsCVabNorm);
+Y_test = zeros(length(X_test),1);
+Y_test(end-nObsTest_abNorm+1:end) = Yabnormal(nObsCVabNorm+1:end);
+</pre><h2 id="5">DATA RESCALING</h2><p>We choose to apply a min-Max sacaling transformation to the data</p><pre class="codeinput"><span class="comment">% Test set scaling wrt training set</span>
+<span class="keyword">for</span> i = 1:numel(selected_cols)
+   X_test(:,i) = rescale(X_test(:,i),min(X_train(:,i)),max(X_train(:,i)));
+<span class="keyword">end</span>
+
+<span class="comment">% Validation set scaling wrt training set</span>
+<span class="keyword">for</span> i = 1:numel(selected_cols)
+   XCV(:,i) = rescale(XCV(:,i),min(X_train(:,i)),max(X_train(:,i)));
+<span class="keyword">end</span>
+
+<span class="comment">% Training set scaling</span>
+<span class="keyword">for</span> i = 1:numel(selected_cols)
+   X_train(:,i) = rescale(X_train(:,i));
+<span class="keyword">end</span>
+</pre><h2 id="6">SUBSAMPLING</h2><p>% 1) For the standard classification models (Matlab Classification Learner) %    we have tried to solve the unbalanced dataset problem by apllying a %   subsampling method</p><p>X_train_0 = X_train(Y_train==0,:); X_train_1 = X_train(Y_train==1,:);</p><p>indexes = randi(size(X_train_1,1),size(X_train_1,1),1);</p><p>X_train_balanced = [X_train_0(indexes,:);X_train_1]; Y_train_balanced = [zeros(size(X_train_1,1),1);ones(size(X_train_1,1),1)];</p><h2 id="7">COPULAS NOVELTY DETECTION MODELS - Gaussian Copula</h2><pre class="codeinput"><span class="comment">% Trainin set size</span>
+[nSample, nFeatures] = size(X_train(:,:));
+
+<span class="comment">% Gaussian copula fitting</span>
+uTrain = zeros(nSample, nFeatures);
+<span class="keyword">for</span> i = 1:nFeatures
+    uTrain(:,i) = ksdensity(X_train(:,i), X_train(:,i), <span class="string">'function'</span>, <span class="string">'cdf'</span>);
+<span class="keyword">end</span>
+[rhohat0] = copulafit(<span class="string">'Gaussian'</span>, uTrain);
+</pre><h2 id="8">HYPERPARAMETER EPSILON TUNING</h2><p>We performed hyperparameter tuning on the validation set by optimizing different performance measures in the function "OptimThreshold"</p><pre class="codeinput"><span class="comment">% Validation Set size</span>
+[nSample, nFeatures] = size(XCV(:,:));
+
+<span class="comment">% Validation set solution of the model</span>
+uCV = zeros(nSample, nFeatures);
+<span class="keyword">for</span> i = 1:nFeatures
+    uCV(:,i) = ksdensity(XCV(:,i), XCV(:,i), <span class="string">'function'</span>, <span class="string">'cdf'</span>);
+<span class="keyword">end</span>
+p = copulapdf(<span class="string">'Gaussian'</span>,uCV,rhohat0);
+
+<span class="comment">% Cross Validation Tuning</span>
+[bestEpsilon, bestrec] = OptimThreshold(yCV, p);
+
+disp(<span class="string">'--- Gaussian copula model ---'</span>)
+disp(<span class="string">'Best Epsilon:'</span>)
+disp(bestEpsilon)
+disp(<span class="string">'Best Performance Measure on validation:'</span>)
+disp(bestrec)
+</pre><pre class="codeoutput">--- Gaussian copula model ---
+Best Epsilon:
+   2.6667e+03
+
+Best Performance Measure on validation:
+    0.9885
+
+</pre><h2 id="9">TEST SET MODEL PERFORMANCE</h2><p>We analyzed our model performance on the unseen test set</p><pre class="codeinput"><span class="comment">% Test set size</span>
+[nSample, nFeatures] = size(X_test(:,:));
+
+<span class="comment">% Test set solution of the model</span>
+uTest = zeros(nSample, nFeatures);
+<span class="keyword">for</span> i = 1:nFeatures
+    uTest(:,i) = ksdensity(X_test(:,i), X_test(:,i), <span class="string">'function'</span>, <span class="string">'cdf'</span>);
+<span class="keyword">end</span>
+p = copulapdf(<span class="string">'Gaussian'</span>,uTest,rhohat0);
+
+<span class="comment">% Model predictions</span>
+predictions = p &lt; bestEpsilon;
+
+<span class="comment">% Performance Measures</span>
+tp = sum((predictions == 1) &amp; (Y_test == 1));
+fp = sum((predictions == 1) &amp; (Y_test == 0));
+fn = sum((predictions == 0) &amp; (Y_test == 1));
+tn = sum((predictions == 0) &amp; (Y_test == 0));
+
+accuracy  = (tp+tn)/(tp+fp+tn+fn);
+precision = tp / (tp + fp);
+recall    = tp / (tp + fn);
+F1_score  = 2 * precision * recall / (precision + recall);
+
+disp(<span class="string">'Recall on test set:'</span>)
+disp(recall)
+disp(<span class="string">'Precision on test set:'</span>)
+disp(precision)
+</pre><pre class="codeoutput">Recall on test set:
+    0.9867
+
+Precision on test set:
+    0.6298
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EARLY WARNING SYSTEM FOR ANOMALY DETECTION 
+%  Final Project Fintech Course 2022 
+%  MSc Mathematical Engineering 
+%    - Alessandro Del Vitto 
+%    - Michele Di Sabato 
+%    - Raffaella D'Anna 
+%    - Andrea Puricelli 
+%    - Rita Numeroli 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clc
+clear 
+close all
+
+% Dataset loading  
+load('C:\Users\famig\Documents\Alessandro\POLIMI\Fintech\BusinessCase3\EWS.mat')
+
+
+%% FEATURE STAZIONARIZATION 
+
+% Always positive variables   => log-differences (log-returns)
+Indices_Currencies = [XAUBGNL BDIY CRY Cl1 DXY EMUSTRUU GBP JPY LF94TRUU...
+                      LF98TRUU LG30TRUU LMBITR LP01TREU...
+                      LUACTRUU LUMSTRUU MXBR MXCN MXEU MXIN MXJP MXRU MXUS VIX];
+
+% Possibly negative variables => first differences (variations)
+InterestRates = [EONIA GTDEM10Y GTDEM2Y GTDEM30Y GTGBP20Y GTGBP2Y GTGBP30Y...
+                 GTITL10YR GTITL2YR GTITL30YR GTJPY10YR GTJPY2YR...
+                 GTJPY30YR US0001M USGG3M USGG2YR GT10 USGG30YR];
+             
+% Stationary Features  
+X = [diff(log(Indices_Currencies)) ECSURPUS(2:end) diff(InterestRates)]; 
+
+% Response 
+Response = Y(2:end);      
+
+% Time window 
+Days = Data(1:end);       
+
+
+%% FEATURE SELECTION 
+% We have proceeded in feature selection on Python 
+%  - we have applied a statistical test to discard features that did not
+%    have a relevant change in distributions between the classes
+%  - we have eliminated highly correlated features 
+%  - we have selected a subset of the remaining features accordingly to
+%    their financial menaing and geographical information 
+
+% Selected Features 
+selected_cols = [2 3 25 27 30 16 18 22 40 23];
+X = X(:,selected_cols);
+
+
+%% DATASET SPLITTING 
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 1) Splitting for standard classification (Matlab Classification Learner)
+% 
+% N = size(X(:,1));
+% train_perc = 0.8;
+% split = round(train_perc*N);
+% 
+% X_train = X(1:split,:);
+% X_test  = X(split+1:end,:);
+% 
+% Y_train = Response(1:split,:);
+% Y_test  = Response(split+1:end,:);
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 2) Splitting for copula novelty detection models
+
+% Tot number of samples 
+nObs = length(Response);   
+
+% Tot number of normal samples 
+nObsNorm = sum(Response == 0); 
+% Tot number of abnormal samples 
+nObsAbNorm = nObs - nObsNorm; 
+
+% Training set size (normal samples only)
+nObsTrain = round(0.80*nObsNorm); 
+
+% Validation set normal portion size 
+nObsCVNorm = round(0.10*nObsNorm); 
+% Validation set abnormal portion size (balanced wrt normal part)
+nObsCVabNorm = nObsCVNorm; 
+
+% Test set abnormal portion size 
+nObsTest_abNorm = nObsAbNorm - nObsCVabNorm; 
+
+% Dataset Shuffling 
+idxPermutation = randperm(nObs);
+
+X = X(idxPermutation,:);
+Response = Response(idxPermutation);
+
+% dividing normal/abnormal
+Xnormal   = X(Response == 0,:);
+Xabnormal = X(Response == 1,:);        % we don't need response for training set (all zeros)
+Yabnormal = Response(Response == 1,:);
+
+% TRAINING SET 
+X_train = Xnormal(1:nObsTrain,:);
+% VALIDATION SET 
+XCV     = [Xnormal(nObsTrain+1:nObsTrain+1+nObsCVNorm,:); Xabnormal(1:nObsCVabNorm,:)];
+% TEST SET 
+X_test  = [Xnormal(nObsTrain+1+nObsCVNorm+1:end,:); Xabnormal(nObsCVabNorm+1:end,:)];
+
+% Responses 
+yCV = zeros(length(XCV),1);
+yCV(end-nObsCVabNorm+1:end) = Yabnormal(1:nObsCVabNorm);
+Y_test = zeros(length(X_test),1);
+Y_test(end-nObsTest_abNorm+1:end) = Yabnormal(nObsCVabNorm+1:end);
+
+
+%% DATA RESCALING 
+% We choose to apply a min-Max sacaling transformation to the data 
+
+% Test set scaling wrt training set 
+for i = 1:numel(selected_cols)
+   X_test(:,i) = rescale(X_test(:,i),min(X_train(:,i)),max(X_train(:,i))); 
+end
+
+% Validation set scaling wrt training set 
+for i = 1:numel(selected_cols)
+   XCV(:,i) = rescale(XCV(:,i),min(X_train(:,i)),max(X_train(:,i))); 
+end
+
+% Training set scaling 
+for i = 1:numel(selected_cols)
+   X_train(:,i) = rescale(X_train(:,i)); 
+end
+
+
+%% SUBSAMPLING 
+% % 1) For the standard classification models (Matlab Classification Learner)
+% %    we have tried to solve the unbalanced dataset problem by apllying a
+% %   subsampling method 
+% 
+% X_train_0 = X_train(Y_train==0,:);
+% X_train_1 = X_train(Y_train==1,:);
+% 
+% indexes = randi(size(X_train_1,1),size(X_train_1,1),1);
+% 
+% X_train_balanced = [X_train_0(indexes,:);X_train_1];
+% Y_train_balanced = [zeros(size(X_train_1,1),1);ones(size(X_train_1,1),1)];
+
+
+%% COPULAS NOVELTY DETECTION MODELS - Gaussian Copula 
+
+% Trainin set size 
+[nSample, nFeatures] = size(X_train(:,:));
+
+% Gaussian copula fitting 
+uTrain = zeros(nSample, nFeatures);
+for i = 1:nFeatures
+    uTrain(:,i) = ksdensity(X_train(:,i), X_train(:,i), 'function', 'cdf');
+end
+[rhohat0] = copulafit('Gaussian', uTrain); 
+
+
+%% HYPERPARAMETER EPSILON TUNING 
+% We performed hyperparameter tuning on the validation set by optimizing
+% different performance measures in the function "OptimThreshold"
+
+% Validation Set size 
+[nSample, nFeatures] = size(XCV(:,:));
+
+% Validation set solution of the model 
+uCV = zeros(nSample, nFeatures);
+for i = 1:nFeatures
+    uCV(:,i) = ksdensity(XCV(:,i), XCV(:,i), 'function', 'cdf');
+end
+p = copulapdf('Gaussian',uCV,rhohat0); 
+
+% Cross Validation Tuning 
+[bestEpsilon, bestrec] = OptimThreshold(yCV, p);
+
+disp('REPLACE_WITH_DASH_DASH- Gaussian copula model REPLACE_WITH_DASH_DASH-')
+disp('Best Epsilon:')
+disp(bestEpsilon)
+disp('Best Performance Measure on validation:')
+disp(bestrec)
+
+
+%% TEST SET MODEL PERFORMANCE  
+% We analyzed our model performance on the unseen test set 
+
+% Test set size 
+[nSample, nFeatures] = size(X_test(:,:));
+
+% Test set solution of the model 
+uTest = zeros(nSample, nFeatures);
+for i = 1:nFeatures
+    uTest(:,i) = ksdensity(X_test(:,i), X_test(:,i), 'function', 'cdf');
+end
+p = copulapdf('Gaussian',uTest,rhohat0);
+
+% Model predictions 
+predictions = p < bestEpsilon;
+
+% Performance Measures 
+tp = sum((predictions == 1) & (Y_test == 1));
+fp = sum((predictions == 1) & (Y_test == 0));
+fn = sum((predictions == 0) & (Y_test == 1));
+tn = sum((predictions == 0) & (Y_test == 0));
+
+accuracy  = (tp+tn)/(tp+fp+tn+fn);
+precision = tp / (tp + fp);
+recall    = tp / (tp + fn);
+F1_score  = 2 * precision * recall / (precision + recall);
+
+disp('Recall on test set:')
+disp(recall)
+disp('Precision on test set:')
+disp(precision)
+
+
+##### SOURCE END #####
+--></body></html>

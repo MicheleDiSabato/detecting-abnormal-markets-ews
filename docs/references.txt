@@ -1,0 +1,20 @@
+Attilio Meucci, A Short, Comprehensive, Practical Guide to Copulas, 9 September 2011
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1847864
+
+Menardi, G., Torelli, N. Training and assessing classification rules with imbalanced data. Data Min Knowl Disc 28, 92–122 (2014)
+https://doi.org/10.1007/s10618-012-0295-5
+
+He, Haibo & Bai, Yang & Garcia, Edwardo & Li, Shutao. (2008). ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning. Proceedings of the International Joint Conference on Neural Networks. 1322 - 1328. 10.1109/IJCNN.2008.4633969. 
+https://www.researchgate.net/publication/224330873_ADASYN_Adaptive_Synthetic_Sampling_Approach_for_Imbalanced_Learning
+
+N. V. Chawla, K. W. Bowyer, L. O. Hall, W. P. Kegelmeyer, SMOTE: Synthetic Minority Over-sampling Technique
+https://arxiv.org/abs/1106.1813
+
+
+
+
+
+
+
+
+
