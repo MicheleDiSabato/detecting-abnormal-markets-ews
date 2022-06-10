@@ -20,7 +20,16 @@ Feel free to visit [this link](https://github.com/MicheleDiSabato/detecting-abno
 
 The dataset is composed of 42 time series, corresponsing to the time evolution of 42 indices from [Bloomberg](https://www.bloomberg.com/europe):
 ![VIX_XAUBGNL_EONIA_USGG2YR](plots/VIX_XAUBGNL_EONIA_USGG2YR.png)
-The blue lines correspond to risk-off (anomalous) weeks, while the white regions are risk-on (normal) periods. 
+The vertical blue lines correspond to risk-off (anomalous) weeks, while the white regions are risk-on (normal) periods. 
 
 To improve the classification performance, we transformed the data to make it stationary, passing to the logarithm (for non negative indices) or to finite differences. For example, the previous four indices become:
 ![VIX_XAUBGNL_EONIA_USGG2YR_stationary](plots/VIX_XAUBGNL_EONIA_USGG2YR_stationary.png)
+
+We used augmented Dickey Fuller test to check whether stationarity has been reached.
+
+Many features are correlated, some have low variance with repect to the others and some indices will not help to predict anomalies according to a financial perspective. For these reasons, we used Kolmogorov Smirnov test to remove useless indices, i.e. indices which have the same distribution under risk-on and risk-off perdiods.
+
+After an intensive feature selection, we end up with:
+![final_features](plots/final_features.png)
+
+![final_features_stationary](plots/final_features_stationary.png)
