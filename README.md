@@ -1,24 +1,19 @@
+# Authors:
+* [Raffaella D'Anna](https://www.linkedin.com/in/raffaella-d-anna-b779501a6/)
+* [Alessandro Del Vitto](https://github.com/AlessandroDelVitto)
+* [Michele Di Sabato](https://www.linkedin.com/in/michele-di-sabato/)
+* [Rita Numeroli]()
+* [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
+
 # Detecting Abnormal Markets - Early Warning Systems
 
-Current objectves and ideas:
+To improve financial performance and prevent risks, it is important to detect anomalous behavior in the Financial Markets,
+which have a tendency to crash.
+* During normal periods or **risk-on** periods, investors have a high-risk appetite and bid up the prices of risky assets in the
+market
+* During a crisis, or **risk-off** periods, risk premia and financial assets exhibit anomalous behavior; investors become more
+risk-averse and sell risky assets, sending their prices lower, and tend to gravitate toward lower-risk investments.
 
-1) augmented dickey fuller test for stationarity of functions
-2) feature selection might be more important than stationarity
-3) look at cointegration (johansen test) and fractional differentiation 
-4) Kolmogorov smirnov (nonparametric test) to check if the distribution during the two periods is the same
-5) rolling logistic regression and COPOD
-6) combine models 
-7) use [conformal prediction](https://github.com/valeman/awesome-conformal-prediction) to predict the anomalies
-8) over/undersampling
+In this project we use [copulas](https://arxiv.org/abs/2009.09463) and k-NN coupled with over-sampling techniques (Naive random oversampling, [SMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html), [BorderlineSMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.BorderlineSMOTE.html), [ADASYN](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.ADASYN.html) and [Naive random over-sampling](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html)) applied to some finantial indices, to classify a week as a risk-on week (nromal week) or risk-off week (anomaly).
 
-Moreover,
-* look at correlation among the selected features: to detect an anomaly it could be useful to look for "hints", i.e. events after which the correlation among the selected features increaes in absolute value.
-* use FFNN to elaborate some statistics about the time series (average, variance, skewness, kurtosis, ...). With this approach, the sime dependance of each feature is "hidden" in the statistics.
-* choose the optimizing metric based on a business approach: it's better to capture a crisis whenever it happens, rahter than missing it (i.e. avoid false negatives). Still, the other metrics should be greater than a threshold.
-* PCA might not be appropriate, since it is based on second moments, but anomaly detection is often related to higher order moments (e.g. fat tails).
-
-
-To DO:
-* tune \epsilon in a better way
-* use the distribution from the Copula to construct a Confidence Region of level 1 - \alpha and classify as ourliers all the points outside the CR
-* find a better Copula model
+Feel free to visit [this link](https://github.com/MicheleDiSabato/detecting-abnormal-markets-ews/blob/main/report_slides.pdf) for more details.
