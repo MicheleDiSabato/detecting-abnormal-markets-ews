@@ -18,6 +18,6 @@ In this project we use [copulas](https://arxiv.org/abs/2009.09463) and k-NN coup
 
 Feel free to visit [this link](https://github.com/MicheleDiSabato/detecting-abnormal-markets-ews/blob/main/report_slides.pdf) for more details.
 
-The dataset is composed of 42 time series, corresponsing to the time evolution of 42 indices from [Bloomberg](https://www.bloomberg.com/europe). A sample of four of them is:
+The dataset is composed of 42 time series, corresponsing to the time evolution of 42 indices from [Bloomberg](https://www.bloomberg.com/europe), for example:
 ![VIX_XAUBGNL_EONIA_USGG2YR](plots/VIX_XAUBGNL_EONIA_USGG2YR.png)
 The blue lines correspond to risk-off (anomalous) weeks, while the white regions are risk-on (normal) periods. 
