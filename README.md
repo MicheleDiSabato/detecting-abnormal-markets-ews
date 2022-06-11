@@ -4,11 +4,12 @@
 * [Michele Di Sabato](https://www.linkedin.com/in/michele-di-sabato/)
 * [Rita Numeroli]()
 * [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
+
 <p align="center">
   <img src="plots/readme_images/pics.PNG">
 </p>
 
-#Detecting Abnormal Markets - Early Warning Systems
+# Detecting Abnormal Markets - Early Warning Systems
 
 ## :clipboard: Framework:
 To improve financial performance and prevent risks, it is important to detect anomalous behavior in the Financial Markets,
