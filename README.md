@@ -1,16 +1,10 @@
-{r, figures-side, fig.show="hold", out.width="50%"}
-par(mar = c(4, 4, .1, .1))
-plot(cars)
-plot(mpg ~ hp, data = mtcars, pch = 19)
-
-
 # Authors:
 * [Raffaella D'Anna](https://www.linkedin.com/in/raffaella-d-anna-b779501a6/)
 * [Alessandro Del Vitto](https://github.com/AlessandroDelVitto)
 * [Michele Di Sabato](https://www.linkedin.com/in/michele-di-sabato/)
 * [Rita Numeroli]()
 * [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
-
+![pics](plots/readme_images/pics.png)
 # Detecting Abnormal Markets - Early Warning Systems
 
 ## :clipboard: Framework:
