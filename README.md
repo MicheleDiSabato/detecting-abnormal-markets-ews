@@ -15,14 +15,18 @@ market
 * During a crisis, or **risk-off** periods, risk premia and financial assets exhibit anomalous behavior; investors become more
 risk-averse and sell risky assets, sending their prices lower, and tend to gravitate toward lower-risk investments.
 
+## :dart: Goal and statistical tools:
 In this project we use [copulas](https://arxiv.org/abs/2009.09463) and k-NN coupled with over-sampling techniques (Naive random oversampling, [SMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html), [BorderlineSMOTE](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.BorderlineSMOTE.html), [ADASYN](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.ADASYN.html) and [Naive random over-sampling](https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html)) applied to some financial indices, with the goal of classifying a week as a risk-on week (nromal week) or risk-off week (anomaly).
 
 Feel free to visit [this link](report_slides.pdf) for more details.
 
+## :chart_with_upwards_trend: The dataset:
 The dataset is composed of 42 time series, corresponsing to the time evolution of 42 indices from [Bloomberg](https://www.bloomberg.com/europe):
 ![VIX_XAUBGNL_EONIA_USGG2YR](plots/VIX_XAUBGNL_EONIA_USGG2YR.png)
 The vertical blue lines correspond to risk-off (anomalous) weeks, while the white regions are risk-on (normal) periods. 
 
+## :pushpin: Workflow:
+## :bulb: Workflow:
 To improve the classification performance and to apply "static" statistical analysis (such as statistical tests), we transformed the data to achieve stationarity, passing to the logarithm (for non negative indices) or to finite differences. For example, the previous four indices become:
 ![VIX_XAUBGNL_EONIA_USGG2YR_stationary](plots/VIX_XAUBGNL_EONIA_USGG2YR_stationary.png)
 
