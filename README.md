@@ -1,6 +1,6 @@
 # Authors:
 * [Raffaella D'Anna](https://www.linkedin.com/in/raffaella-d-anna-b779501a6/)
-* [Alessandro Del Vitto](https://github.com/AlessandroDelVitto)
+* [Alessandro Del Vitto](https://www.linkedin.com/in/alessandro-del-vitto-46a9b9241/)
 * [Michele Di Sabato](https://www.linkedin.com/in/michele-di-sabato/)
 * [Rita Numeroli]()
 * [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
