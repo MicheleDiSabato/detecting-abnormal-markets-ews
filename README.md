@@ -26,7 +26,6 @@ The dataset is composed of 42 time series, corresponsing to the time evolution o
 The vertical blue lines correspond to risk-off (anomalous) weeks, while the white regions are risk-on (normal) periods. 
 
 ## :pushpin: Workflow:
-## :bulb: Workflow:
 To improve the classification performance and to apply "static" statistical analysis (such as statistical tests), we transformed the data to achieve stationarity, passing to the logarithm (for non negative indices) or to finite differences. For example, the previous four indices become:
 ![VIX_XAUBGNL_EONIA_USGG2YR_stationary](plots/VIX_XAUBGNL_EONIA_USGG2YR_stationary.png)
 
