@@ -7,6 +7,7 @@
 
 # Detecting Abnormal Markets - Early Warning Systems
 
+## :clipboard: Framework:
 To improve financial performance and prevent risks, it is important to detect anomalous behavior in the Financial Markets,
 which have a tendency to crash.
 * During normal periods or **risk-on** periods, investors have a high-risk appetite and bid up the prices of risky assets in the
