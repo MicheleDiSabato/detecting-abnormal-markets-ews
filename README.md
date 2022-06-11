@@ -4,7 +4,9 @@
 * [Michele Di Sabato](https://www.linkedin.com/in/michele-di-sabato/)
 * [Rita Numeroli]()
 * [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
-![pics](plots/readme_images/pics.png)
+<p align="center">
+  <img src="plots/readme_images/pics.png">
+</p>
 # Detecting Abnormal Markets - Early Warning Systems
 
 ## :clipboard: Framework:
