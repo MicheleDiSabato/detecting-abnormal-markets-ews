@@ -5,7 +5,7 @@
 * [Rita Numeroli]()
 * [Andrea Puricelli](https://www.linkedin.com/in/andrea-puricelli-/)
 <p align="center">
-  <img src="plots/readme_images/pics.png">
+  <img src="plots/readme_images/pics.PNG">
 </p>
 # Detecting Abnormal Markets - Early Warning Systems
 
